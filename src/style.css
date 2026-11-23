@@ -1285,3 +1285,29 @@ footer {
     }
 
 }
+
+/* Correctif : le lien actif de navigation ne recolore pas le bouton. */
+header nav a.btn[href="#/reservation"],
+header nav a.btn[href="#/reservation"]:visited,
+header nav a.btn[href="#/reservation"][aria-current="page"] {
+    color: #ffffff;
+    background-color: #174fe6;
+    border-color: #174fe6;
+    text-decoration: none;
+}
+
+header nav a.btn[href="#/reservation"]:hover,
+header nav a.btn[href="#/reservation"]:active,
+header nav a.btn[href="#/reservation"][aria-current="page"]:hover {
+    color: #ffffff;
+    background-color: #103bb5;
+    border-color: #103bb5;
+}
+
+header nav a.btn[href="#/reservation"]:focus-visible {
+    color: #ffffff;
+    background-color: #174fe6;
+    border-color: #174fe6;
+    outline: 3px solid #174fe6;
+    outline-offset: 4px;
+}
