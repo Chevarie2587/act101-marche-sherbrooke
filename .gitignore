@@ -1,0 +1,48 @@
+# Dépendances Node.js
+node_modules/
+
+# Compilation et caches
+dist/
+.vite/
+.cache/
+coverage/
+*.tsbuildinfo
+
+# Journaux
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Configuration locale et secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.local
+
+# Éditeurs : conserver les configurations partagées de VS Code
+.vs/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+*.suo
+*.user
+*.swp
+*.swo
+*~
+
+# Fichiers du système
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+
+# Archives de remise générées localement
+# Ajouter ici leurs noms précis si elles sont conservées dans le repo.
+# Ne pas ignorer toutes les images ou archives : certaines peuvent être utiles.
