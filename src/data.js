@@ -14,7 +14,9 @@ export const kiosques = [0, 1].flatMap(etage =>
                 largeur,
                 profondeur,
                 rotation: etage === 1 ? (cote === 0 ? Math.PI / 2 : -Math.PI / 2) : 0,
-                prix: etage === 0 ? (rang === 3 ? 85 : 70) : (rang === 3 ? 70 : 55),
+                prix: etage === 0
+                    ? (rang === 3 ? 215 : 200)
+                    : (rang === 3 ? 165 : 150),
                 zone: cote === 0 ? 'Aile ouest' : 'Aile est'
             };
         })
