@@ -161,7 +161,7 @@ function booking() {
                 <div class="row"><label class="field">Courriel<input name="courriel" type="email" autocomplete="email" required maxlength="160"></label><label class="field">Téléphone<input name="telephone" type="tel" autocomplete="tel" required maxlength="30"></label></div>
                 <label class="field">Produits ou services<select name="categorie" required><option value="">Choisir une catégorie</option><option>Alimentation</option><option>Art et artisanat</option><option>Maison et décoration</option><option>Objets et accessoires</option><option>Services et autres</option></select></label>
                 <details class="equipment-details"><summary>Ajouter de l’équipement <span class="optional">Facultatif</span></summary><p class="fine">Une table est déjà incluse. Tarifs supplémentaires par jour.</p>
-                    ${equipements.map(e => `<label class="equip-row"><span>${e.nom}<small>${money(e.prix)} / unité</small></span><input name="eq-${e.id}" type="number" min="0" max="${e.max}" step="1" value="0" aria-label="Quantité : ${e.nom}"></label>`).join('')}
+                    ${equipements.map(e => `<div class="equip-row"><label for="eq-${e.id}">${e.nom}<small>${money(e.prix)} / unité</small></label><div class="quantity-control"><input id="eq-${e.id}" name="eq-${e.id}" type="number" min="0" max="${e.max}" step="1" value="0" aria-label="Quantité : ${e.nom}"><div class="quantity-arrows">${[1, -1].map(step => `<button type="button" data-equipment="${e.id}" data-step-quantity="${step}" aria-label="${step > 0 ? 'Augmenter' : 'Diminuer'} la quantité : ${e.nom}"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${step > 0 ? 'm5 12 5-5 5 5' : 'm5 8 5 5 5-5'}"/></svg></button>`).join('')}</div></div></div>`).join('')}
                 </details>
                 <details class="notes-details"><summary>Un besoin particulier? <span class="optional">Facultatif</span></summary><label class="field"><span class="visually-hidden">Besoins particuliers</span><textarea name="notes" maxlength="1000" placeholder="Prise électrique, installation…"></textarea></label></details>
             </fieldset>
@@ -231,6 +231,10 @@ function initBooking() {
     const chosen = () => kiosques.find(k => k.id === selected);
     function message(text = '', error = false) { status.textContent = text; status.classList.toggle('error', error); }
     function refresh() {
+        form.querySelectorAll('[data-step-quantity]').forEach(button => {
+            const equipment = equipements.find(item => item.id === button.dataset.equipment);
+            button.disabled = Number(button.dataset.stepQuantity) > 0 ? qty(equipment) >= equipment.max : qty(equipment) <= 0;
+        });
         const valid = validDates(), k = chosen();
         const canBook = valid && canRent(k);
         document.querySelector('#clear-selection').hidden = !k || step !== 1;
@@ -377,6 +381,12 @@ function initBooking() {
     start.addEventListener('change', () => { end.min = start.value || today(); if (end.value < start.value) end.value = start.value; datePickers.forEach(picker => picker.sync()); message(); refresh(); });
     end.addEventListener('change', () => { datePickers.forEach(picker => picker.sync()); message(); refresh(); });
     equipements.forEach(e => form.elements['eq-' + e.id].addEventListener('input', refresh));
+    form.querySelectorAll('[data-step-quantity]').forEach(button => button.addEventListener('click', () => {
+        const equipment = equipements.find(item => item.id === button.dataset.equipment);
+        const input = form.elements['eq-' + equipment.id];
+        input.value = Math.min(equipment.max, Math.max(0, qty(equipment) + Number(button.dataset.stepQuantity)));
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    }, eventOptions));
     form.addEventListener('invalid', e => {
         const folded = e.target.closest('details'); if (folded) folded.open = true;
     }, true);
